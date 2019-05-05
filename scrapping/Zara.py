@@ -33,6 +33,12 @@ def parse_listing(categories):
 
 def parse_detail( category, url, postman ):
 
+    check = postman.get('SELECT `idx` FROM `products` WHERE `url` = %s ', [url])
+
+    if 'idx' in check:
+        print(category, 'skip')
+        return
+
     spider = Spider( url = url )
 
     soup = BeautifulSoup(spider.get_page(), "html.parser")
@@ -47,14 +53,30 @@ def parse_detail( category, url, postman ):
     # product name
     product_info = soup.find("div", class_="product-info-wrapper")
 
+    # product images
+    soup_images = soup.find_all("img", class_="image-big _img-zoom")
+    product_images = [soup_img["src"] for soup_img in soup_images]
+
+    # check if image is properly brought
+    skip_product = False
+    for image in product_images:
+        if 'base64' in image:
+            skip_product = True
+            print("base64", image)
+            break
+
+    if skip_product:
+        with open("skip.txt") as f:
+            print("skip.txt", url)
+            f.write(url)
+            f.write("\n")
+        return
+
     # insert into db
     sql = 'INSERT INTO `products` (`mall_idx`, `category`, `item_id`, `name`, `name_org`, `detail`, `url`, `created_date_time`, `status`) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s )'
     params = ['1', category["name"], '', product_name.get_text(), product_name.get_text(), product_info.prettify(), url, str(datetime.now().strftime("%Y-%m-%d %H:%I:%S")), '1']
     product_idx = postman.create(sql, params)
-
-    # product images
-    soup_images = soup.find_all("img", class_="image-big _img-zoom")
-    product_images = [soup_img["src"] for soup_img in soup_images]
+    print("created: ", product_idx)
 
     # insert into db
     for image in product_images:
