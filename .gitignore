@@ -8,6 +8,9 @@ __pycache__/
 
 database.config
 
+image/*.jpg
+image/*.jpeg
+
 
 # Distribution / packaging
 .Python
