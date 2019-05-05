@@ -6,14 +6,6 @@ from selenium.webdriver.support import expected_conditions as EC
 import codecs
 import os
 
-class Url:
-    base_url = "http://court.philgookang.com/crawl/view/"
-
-class Constant:
-    legal_office = [
-
-    ]
-
 class Spider:
 
     # Selenium Web Driver
@@ -26,7 +18,7 @@ class Spider:
     save_log = False
 
     # Log output location
-    log_location = "/mnt/ssd3/court/headless/log/"
+    log_location = "/mnt/ssd3/fashsion_up/log/"
 
     # log output filename
     log_filename = "log.txt"
@@ -39,6 +31,8 @@ class Spider:
         self.log_location   = kwargs['log_location']    if 'log_location'   in kwargs else '/mnt/ssd3/court/headless/log/'
         self.log_filename   = kwargs['log_filename']    if 'log_filename'   in kwargs else 'log.txt'
         self.save_log       = kwargs['save_log']        if 'save_log'       in kwargs else False
+
+        self.url            = kwargs['url']             if 'url'            in kwargs else ''
 
         options = webdriver.ChromeOptions()
         #options.add_argument('--screenshot')
