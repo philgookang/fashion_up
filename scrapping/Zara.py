@@ -5,6 +5,7 @@ from datetime import datetime
 import requests
 import json
 from multiprocessing import Pool
+import time
 
 def parse_main_menu():
 
@@ -22,14 +23,29 @@ def parse_listing(categories):
     postman = Postman.init()
 
     for category in categories:
+        print(category)
         spider = Spider( url = category["url"] )
+
+        with open("page.html", "a") as f:
+            f.write(spider.get_page())
+
         soup = BeautifulSoup(spider.get_page(), "html.parser")
         soup_a = soup.find_all("a", class_="item _item")
         products = [a["href"] for a in soup_a]
 
+        print(products)
+
         for num,url in enumerate(products):
             parse_detail( category, url, postman )
             print(category, num, len(products))
+            print("sleep 3")
+            time.sleep(1)
+            print("sleep 2")
+            time.sleep(1)
+            print("sleep 1")
+            time.sleep(1)
+            
+        break
 
 def parse_detail( category, url, postman ):
 
@@ -66,7 +82,7 @@ def parse_detail( category, url, postman ):
             break
 
     if skip_product:
-        with open("skip.txt") as f:
+        with open("skip.txt", "a") as f:
             print("skip.txt", url)
             f.write(url)
             f.write("\n")
@@ -103,4 +119,5 @@ def download_image(image):
         fp.write(r.content)
 
 categories = parse_main_menu()
+print(categories)
 parse_listing(categories)
