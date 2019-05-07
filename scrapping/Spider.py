@@ -34,12 +34,17 @@ class Spider:
 
         self.url            = kwargs['url']             if 'url'            in kwargs else ''
 
+        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+
         options = webdriver.ChromeOptions()
+        options.add_argument('user-agent={0}'.format(user_agent))
         #options.add_argument('--screenshot')
         #options.add_argument('--disable-gpu')
-        #options.add_argument('--window-size=1280,1696')
+        options.add_argument('--window-size=1280,1696')
         #options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--disable-application-cache')
+
+        # options.add_argument('--disable-application-cache')
+
         options.add_argument('--incognito')
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
